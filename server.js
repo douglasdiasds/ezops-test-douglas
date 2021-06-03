@@ -1,18 +1,21 @@
 var express = require('express');
 var app = express();
+var http = require('http').Server(app);
+var bodyParser = require('body-parser')
+var mongoose = require('mongoose');
+
 var server = app.listen(3000, () => {
  console.log('server is running on port', server.address().port);
 });
+var io = require('socket.io')(server);
 app.use(express.static(__dirname));
 
-var mongoose = require('mongoose');
 var dbUrl = 'mongodb+srv://nodechat:nodechat123455@cluster0.vtmn2.mongodb.net/ezops-chat?retryWrites=true&w=majority'
 mongoose.connect(dbUrl , (err) => { 
    console.log('mongodb connected',err);
 })
 var Message = mongoose.model('Message',{ name : String, message : String})
 
-var bodyParser = require('body-parser')
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}))
 
@@ -26,6 +29,11 @@ app.post('/messages', (req, res) => {
   message.save((err) =>{
     if(err)
       sendStatus(500);
+  	io.emit('message', req.body);
     res.sendStatus(200);
   })
+})
+
+io.on('connection', () =>{
+ console.log('a user is connected')
 })

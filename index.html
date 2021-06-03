@@ -21,7 +21,10 @@
                 <div id="messages"></div>
             </div>
             <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+            <script src="/socket.io/socket.io.js"></script>
             <script>
+            	//var socket = io.connect("http://localhost:3000");
+            	var socket = io();
             	$(() => {
 				    $("#send").click(() => {
 				        sendMessage({
@@ -32,6 +35,8 @@
 				    getMessages()
 				})
 
+            	socket.on('message', addMessages)
+
 				function addMessages(message) {
 				    $("#messages").append(`
 				      <h4> ${message.name} </h4>
@@ -39,13 +44,13 @@
 				}
 
 				function getMessages() {
-				    $.get('http://localhost:3000/messages', (data) => {
+				    $.get(`${window.location.origin}/messages`, (data) => {
 				        data.forEach(addMessages);
 				    })
 				}
 
 				function sendMessage(message) {
-				    $.post('http://localhost:3000/messages', message)
+				    $.post(`${window.location.origin}/messages`, message)
 				}
             </script>
         </body>
