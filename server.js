@@ -6,7 +6,7 @@ var server = app.listen(3000, () => {
 app.use(express.static(__dirname));
 
 var mongoose = require('mongoose');
-var dbUrl = 'mongodb://username:pass@ds257981.mlab.com:57981/simple-chat'
+var dbUrl = 'mongodb+srv://nodechat:nodechat123455@cluster0.vtmn2.mongodb.net/ezops-chat?retryWrites=true&w=majority'
 mongoose.connect(dbUrl , (err) => { 
    console.log('mongodb connected',err);
 })
@@ -15,3 +15,17 @@ var Message = mongoose.model('Message',{ name : String, message : String})
 var bodyParser = require('body-parser')
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}))
+
+app.get('/messages', (req, res) => {
+  Message.find({},(err, messages)=> {
+    res.send(messages);
+  })
+})
+app.post('/messages', (req, res) => {
+  var message = new Message(req.body);
+  message.save((err) =>{
+    if(err)
+      sendStatus(500);
+    res.sendStatus(200);
+  })
+})
