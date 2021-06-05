@@ -10,7 +10,7 @@ var server = app.listen(3000, () => {
 var io = require('socket.io')(server);
 app.use(express.static(__dirname));
 
-var dbUrl = 'mongodb+srv://nodechat:nodechat123455@cluster0.vtmn2.mongodb.net/ezops-chat?retryWrites=true&w=majority'
+var dbUrl = 'mongodb+srv://nodechat:<senha>@cluster0.vtmn2.mongodb.net/<db-name>?retryWrites=true&w=majority'
 mongoose.connect(dbUrl , (err) => { 
    console.log('mongodb connected',err);
 })
